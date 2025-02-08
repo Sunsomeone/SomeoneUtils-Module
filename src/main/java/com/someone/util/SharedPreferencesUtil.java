@@ -1,82 +1,85 @@
 package com.someone.util;
 
 /*
-  @Author Someone
+ * @Author Someone
  * @Date 2024/11/10 08:45
  */
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.someone.debug.LogReceiver;
+
+import androidx.annotation.NonNull;
+
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class SharedPreferencesUtil {
-    
+
     public static void putPrivateBooleanData(String key, boolean value) {
-        if (key == null) {
-            LogReceiver.e("键为null");
-            return;
+        if (key != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(key, value);
-        editor.apply();
     }
 
     public static void putPrivateIntegerData(String key, Integer value) {
-        if (key == null | value == null) {
-            LogReceiver.e("键或值为null");
-            return;
+        if (key != null && value != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key or value can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(key, value);
-        editor.apply();
     }
 
     public static void putPrivateLongData(String key, long value) {
-        if (key == null) {
-            LogReceiver.e("键为null");
-            return;
+        if (key != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(key, value);
-        editor.apply();
     }
 
     public static void putPrivateFloatData(String key, float value) {
-        if (key == null) {
-            LogReceiver.e("键为null");
-            return;
+        if (key != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(key, value);
-        editor.apply();
     }
 
     public static void putPrivateStringData(String key, String value) {
-        if (key == null | value == null) {
-            LogReceiver.e("键或值为null");
-            return;
+        if (key != null && value != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key or value can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
-        editor.apply();
     }
 
     public static void putPrivateStringSetData(String key, Set<String> value) {
-        if (key == null | value == null) {
-            LogReceiver.e("键或值为null");
-            return;
+        if (key != null && value != null) {
+            SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putStringSet(key, value);
+            editor.apply();
+        } else {
+            throw new NullPointerException("SharedPreferences key or value can't be null");
         }
-        SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet(key, value);
-        editor.apply();
     }
 
     public static boolean getPrivateBooleanData(String key) {
@@ -92,6 +95,7 @@ public class SharedPreferencesUtil {
         return getPrivateIntegerData(key, -1);
     }
 
+    @NonNull
     public static Integer getPrivateIntegerData(String key, int defaultReturn) {
         SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(key, defaultReturn);
@@ -125,7 +129,7 @@ public class SharedPreferencesUtil {
     }
 
     public static Set<String> getPrivateStringSetData(String key) {
-        return getPrivateStringSetData(key, new LinkedHashSet<>());
+        return getPrivateStringSetData(key, new LinkedHashSet<String>());
     }
 
     public static Set<String> getPrivateStringSetData(String key, Set<String> defaultReturn) {
@@ -133,7 +137,7 @@ public class SharedPreferencesUtil {
         return sharedPreferences.getStringSet(key, defaultReturn);
     }
 
-    public static Map<String,?> getPrivateAllData(String key) {
+    public static Map<String, ?> getPrivateAllData(String key) {
         SharedPreferences sharedPreferences = GlobalUtilSetting.getContext().getSharedPreferences(key, Context.MODE_PRIVATE);
         return sharedPreferences.getAll();
     }

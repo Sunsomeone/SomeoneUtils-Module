@@ -1,8 +1,14 @@
 package com.someone.util;
 
+/*
+ * @Author Someone
+ * @Date 2024/09/08 22:45
+ */
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -17,14 +23,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
-import com.someone.debug.LogReceiver;
-
-/**
- * @Author Someone
- * @Date 2024/09/08 22:45
- */
 public class ViewUtil {
 
     public static int toPx(int dp) {
@@ -34,13 +35,13 @@ public class ViewUtil {
     public static int toDp(int px) {
         return (int) (px / GlobalUtilSetting.getContext().getResources().getDisplayMetrics().density);
     }
-    
-    public static int toRoundingPx(int dp) {
-        return (int) (dp * GlobalUtilSetting.getContext().getResources().getDisplayMetrics().density + 0.5);
+
+    public static int toRoundPx(int dp) {
+        return Math.round(dp * GlobalUtilSetting.getContext().getResources().getDisplayMetrics().density);
     }
 
-    public static int toRoundingDp(int px) {
-        return (int) (px / GlobalUtilSetting.getContext().getResources().getDisplayMetrics().density + 0.5);
+    public static int toRoundDp(int px) {
+        return Math.round(px / GlobalUtilSetting.getContext().getResources().getDisplayMetrics().density);
     }
 
     public static View findViewWithTag(ViewGroup viewGroup, Object tag) {
@@ -58,7 +59,7 @@ public class ViewUtil {
         }
         return null;
     }
-    
+
     public static int getMeasuredWidth(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         int widthMeasureSpec;
@@ -114,6 +115,7 @@ public class ViewUtil {
         toolbar.setLayoutParams(new ViewGroup.LayoutParams(-1, toPx(56)));
         return toolbar;
     }
+
     public static ViewGroup createBaseContent() {
         return createLinearLayout(-1, -1, new int[]{}, Gravity.CENTER, LinearLayout.VERTICAL);
     }
@@ -164,15 +166,15 @@ public class ViewUtil {
         return scroll;
     }
 
-    public static RelativeLayout createRelativeLayout(int width , int height) {
+    public static RelativeLayout createRelativeLayout(int width, int height) {
         return createRelativeLayout(width, height, new int[]{}, Gravity.NO_GRAVITY);
     }
 
-    public static RelativeLayout createRelativeLayout(int width , int height, int[] margins) {
+    public static RelativeLayout createRelativeLayout(int width, int height, int[] margins) {
         return createRelativeLayout(width, height, margins, Gravity.NO_GRAVITY);
     }
 
-    public static RelativeLayout createRelativeLayout(int width , int height, int[] margins, int gravity) {
+    public static RelativeLayout createRelativeLayout(int width, int height, int[] margins, int gravity) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         RelativeLayout layout = new RelativeLayout(GlobalUtilSetting.getContext());
@@ -181,19 +183,19 @@ public class ViewUtil {
         return layout;
     }
 
-    public static LinearLayout createLinearLayout(int width , int height) {
+    public static LinearLayout createLinearLayout(int width, int height) {
         return createLinearLayout(width, height, new int[]{}, Gravity.NO_GRAVITY, LinearLayout.VERTICAL);
     }
 
-    public static LinearLayout createLinearLayout(int width , int height, int[] margins) {
+    public static LinearLayout createLinearLayout(int width, int height, int[] margins) {
         return createLinearLayout(width, height, margins, Gravity.NO_GRAVITY, LinearLayout.VERTICAL);
     }
 
-    public static LinearLayout createLinearLayout(int width , int height, int[] margins, int orientation) {
+    public static LinearLayout createLinearLayout(int width, int height, int[] margins, int orientation) {
         return createLinearLayout(width, height, margins, Gravity.NO_GRAVITY, orientation);
     }
 
-    public static LinearLayout createLinearLayout(int width , int height, int[] margins, int gravity, int orientation) {
+    public static LinearLayout createLinearLayout(int width, int height, int[] margins, int gravity, int orientation) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         LinearLayout layout = new LinearLayout(GlobalUtilSetting.getContext());
@@ -203,11 +205,11 @@ public class ViewUtil {
         return layout;
     }
 
-    public static FrameLayout createFrameLayout(int width , int height) {
+    public static FrameLayout createFrameLayout(int width, int height) {
         return createFrameLayout(width, height, new int[]{0});
     }
 
-    public static FrameLayout createFrameLayout(int width , int height,  int[] margins) {
+    public static FrameLayout createFrameLayout(int width, int height, int[] margins) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         FrameLayout layout = new FrameLayout(GlobalUtilSetting.getContext());
@@ -215,19 +217,19 @@ public class ViewUtil {
         return layout;
     }
 
-    public static CardView createCardView(int width , int height) {
+    public static CardView createCardView(int width, int height) {
         return createCardView(width, height, new int[]{}, Gravity.NO_GRAVITY, 0, 0, Color.GRAY);
     }
 
-    public static CardView createCardView(int width , int height, int[] margins) {
+    public static CardView createCardView(int width, int height, int[] margins) {
         return createCardView(width, height, margins, Gravity.NO_GRAVITY, 0, 0, Color.GRAY);
     }
 
-    public static CardView createCardView(int width , int height, int[] margins, int gravity) {
+    public static CardView createCardView(int width, int height, int[] margins, int gravity) {
         return createCardView(width, height, margins, gravity, 0, 0, Color.GRAY);
     }
 
-    public static CardView createCardView(int width , int height, int[] margins, int gravity , float radius, int elevation, int backgroundColor) {
+    public static CardView createCardView(int width, int height, int[] margins, int gravity, float radius, int elevation, int backgroundColor) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         CardView view = new CardView(GlobalUtilSetting.getContext());
@@ -250,7 +252,8 @@ public class ViewUtil {
      return layout;
      }*/
 
-    public static View createView(int width , int height, int[] margins) {
+    @NonNull
+    public static View createView(int width, int height, int[] margins) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         View view = new View(GlobalUtilSetting.getContext());
@@ -258,23 +261,28 @@ public class ViewUtil {
         return view;
     }
 
-    public static TextView createTextView(int width , int height) {
+    @NonNull
+    public static TextView createTextView(int width, int height) {
         return createTextView(width, height, new int[]{}, Gravity.CENTER, "", 16, Color.BLACK);
     }
 
-    public static TextView createTextView(int width , int height, String text) {
+    @NonNull
+    public static TextView createTextView(int width, int height, String text) {
         return createTextView(width, height, new int[]{}, Gravity.CENTER, text, 16, Color.BLACK);
     }
 
-    public static TextView createTextView(int width , int height, int gravity , String text) {
+    @NonNull
+    public static TextView createTextView(int width, int height, int gravity, String text) {
         return createTextView(width, height, new int[]{}, gravity, text, 16, Color.BLACK);
     }
 
-    public static TextView createTextView(int width , int height, int gravity , String text , float textSize, int textColor) {
+    @NonNull
+    public static TextView createTextView(int width, int height, int gravity, String text, float textSize, int textColor) {
         return createTextView(width, height, new int[]{}, gravity, text, textSize, textColor);
     }
 
-    public static TextView createTextView(int width , int height, int[] margins, int gravity , String text , float textSize, int textColor) {
+    @NonNull
+    public static TextView createTextView(int width, int height, int[] margins, int gravity, String text, float textSize, int textColor) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         TextView view = new TextView(GlobalUtilSetting.getContext());
@@ -286,15 +294,18 @@ public class ViewUtil {
         return view;
     }
 
-    public static ImageView createImageView(int width , int height) {
+    @NonNull
+    public static ImageView createImageView(int width, int height) {
         return createImageView(width, height, new int[]{}, null);
     }
 
-    public static ImageView createImageView(int width , int height, Drawable drawable) {
+    @NonNull
+    public static ImageView createImageView(int width, int height, Drawable drawable) {
         return createImageView(width, height, new int[]{}, drawable);
     }
 
-    public static ImageView createImageView(int width , int height, int[] margins, Drawable drawable) {
+    @NonNull
+    public static ImageView createImageView(int width, int height, int[] margins, Drawable drawable) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         ImageView view = new ImageView(GlobalUtilSetting.getContext());
@@ -303,15 +314,18 @@ public class ViewUtil {
         return view;
     }
 
-    public static ImageButton createImageButton(int width , int height) {
-        return  createImageButton(width, height, new int[]{}, null);
+    @NonNull
+    public static ImageButton createImageButton(int width, int height) {
+        return createImageButton(width, height, new int[]{}, null);
     }
 
-    public static ImageButton createImageButton(int width , int height , Drawable drawable) {
-        return  createImageButton(width, height, new int[]{}, drawable);
+    @NonNull
+    public static ImageButton createImageButton(int width, int height, Drawable drawable) {
+        return createImageButton(width, height, new int[]{}, drawable);
     }
 
-    public static ImageButton createImageButton(int width , int height , int[] margins, Drawable drawable) {
+    @NonNull
+    public static ImageButton createImageButton(int width, int height, int[] margins, Drawable drawable) {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, height);
         setMargins(params, margins);
         ImageButton view = new ImageButton(GlobalUtilSetting.getContext());
@@ -320,8 +334,8 @@ public class ViewUtil {
         return view;
     }
 
-    private static void setMargins(ViewGroup.MarginLayoutParams params , int[] margins) {
-        int marginLeft = 0,marginTop = 0,marginRight = 0,marginBottom = 0;
+    private static void setMargins(ViewGroup.MarginLayoutParams params, @NonNull int[] margins) {
+        int marginLeft = 0, marginTop = 0, marginRight = 0, marginBottom = 0;
         if (margins.length == 1) {
             marginLeft = margins[0];
             marginTop = margins[0];
@@ -356,7 +370,7 @@ public class ViewUtil {
             if (view.getLayoutParams() != null && view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
                 view.getLayoutParams().width = width;
                 view.getLayoutParams().height = height;
-                ((LinearLayout.LayoutParams)view.getLayoutParams()).weight = weight;
+                ((LinearLayout.LayoutParams) view.getLayoutParams()).weight = weight;
                 view.requestLayout();
             } else {
                 view.setLayoutParams(new LinearLayout.LayoutParams(width, height, weight));
@@ -381,16 +395,13 @@ public class ViewUtil {
 
         public ViewSet setMargins(int marginLeft, int marginTop, int marginRight, int marginBottom) {
             if (marginLeft < 0 || marginTop < 0 || marginRight < 0 || marginBottom < 0) {
-                LogReceiver.e("传入的边距值为负");
+                return this;
             }
-
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if (layoutParams != null) {
                 if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
                     marginLayoutParams.setMargins(marginLeft, marginTop, marginRight, marginBottom);
-                } else {
-                    LogReceiver.w("无法设置边距 不是MarginLayoutParams的子类");
                 }
             } else {
                 ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -402,7 +413,11 @@ public class ViewUtil {
         }
 
         public ViewSet setBackground(Drawable drawable) {
-            view.setBackground(drawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackground(drawable);
+            } else {
+                view.setBackgroundDrawable(drawable);
+            }
             return this;
         }
 

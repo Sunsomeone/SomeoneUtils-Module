@@ -1,31 +1,28 @@
 package com.someone.util;
 
 /*
-  @Author Someone
+ * @Author Someone
  * @Date 2024/11/12 16:36
  */
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
+import java.lang.ref.WeakReference;
 
 public class GlobalUtilSetting {
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-    @SuppressLint("StaticFieldLeak")
-    private static Activity activity;
+    private static WeakReference<Context> contextRef;
+    private static WeakReference<Activity> activityRef;
     
     public static Context getContext(){
-        return context;
+        return contextRef.get();
     }
     
     public static Activity getActivity(){
-        return activity;
+        return activityRef.get();
     }
     
     public static void setActivity(Activity activity){
-        GlobalUtilSetting.activity = activity;
-        GlobalUtilSetting.context = activity;
+        GlobalUtilSetting.activityRef = new WeakReference<>(activity);
+        GlobalUtilSetting.contextRef = new WeakReference<Context>(activity);
     }
-
-
 }

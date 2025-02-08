@@ -1,10 +1,13 @@
 package com.someone.util;
 
 /*
-  @Author Someone
+ * @Author Someone
  * @Date 2024/09/11 15:30
  */
+
 import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 
 public class ColorUtil {
 
@@ -23,6 +26,7 @@ public class ColorUtil {
         return Color.argb(a, Math.max(r, 0), Math.max(g, 0), Math.max(b, 0));
     }
 
+    @NonNull
     public static String colorToHex(int color) {
         String alpha = Integer.toHexString((color >> 24) & 0xFF);
         String red = Integer.toHexString((color >> 16) & 0xFF);

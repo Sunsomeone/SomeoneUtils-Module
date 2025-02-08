@@ -1,9 +1,10 @@
 package com.someone.util;
 
 /*
-  @Author Someone
+ * @Author Someone
  * @Date 2024/11/09 14:58
  */
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 

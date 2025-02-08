@@ -1,10 +1,14 @@
 package com.someone.util;
 
+/*
+ * @Author Someone
+ * @Date 2024/09/08 13:10
+ */
+
 import android.content.res.AssetManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.someone.debug.LogReceiver;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,12 +26,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @Author Someone
- * @Date 2024/09/08 13:10
- */
 public class FileUtil {
-    private static final File dataFilesDir  = GlobalUtilSetting.getContext().getFilesDir();
+    private static final File dataFilesDir = GlobalUtilSetting.getContext().getFilesDir();
     private static final File dataCacheDir = GlobalUtilSetting.getContext().getCacheDir();
     private static final File externalFilesDir = GlobalUtilSetting.getContext().getExternalFilesDir(null);
     private static final File externalCacheDir = GlobalUtilSetting.getContext().getExternalCacheDir();
@@ -69,16 +69,16 @@ public class FileUtil {
     }
 
     public static byte[] readAssetsFile(String filePath) {
-        if (filePath != null && !filePath.isEmpty()) {
-            AssetManager assetManager = GlobalUtilSetting.getContext().getAssets();
+        if (filePath == null || filePath.isEmpty()) {
+            throw new IllegalArgumentException("传入的文件路径为空");
+        } else {
+            AssetManager assetManager;
             try {
                 assetManager = GlobalUtilSetting.getContext().getAssets();
                 if (assetManager == null) {
-                    LogReceiver.e("AssetManager 没有实例");
                     return new byte[0];
                 }
             } catch (NullPointerException e) {
-                LogReceiver.e("获取 AssetManager 为null");
                 return new byte[0];
             }
             InputStream inputStream;
@@ -88,8 +88,7 @@ public class FileUtil {
                 try {
                     inputStream = new FileInputStream(filePath);
                 } catch (IOException e1) {
-                    LogReceiver.w("不能读取文件：" + filePath);
-                    return new byte[0];
+                    throw new IllegalArgumentException("不能读取文件：" + filePath);
                 }
             }
             StringBuilder builder = new StringBuilder();
@@ -102,21 +101,19 @@ public class FileUtil {
                 reader.close();
                 inputStream.close();
             } catch (IOException e) {
-                LogReceiver.e(e);
+                throw new IllegalArgumentException(e);
             }
             return builder.toString().getBytes();
-        } else {
-            LogReceiver.w("传入的文件路径为空");
-            return new byte[0];
         }
     }
 
+    @Nullable
     public static File createFile(String path, String fileName) throws IOException {
         File file = new File(path, fileName);
         if (!file.exists()) {
             if (file.createNewFile()) {
                 return file;
-            } 
+            }
         }
         return null;
     }
@@ -159,12 +156,19 @@ public class FileUtil {
             if (!targetFile.exists()) {
                 targetFile.createNewFile();
             }
-            try (FileChannel originChannel = new FileInputStream(originFile).getChannel();
-            FileChannel targetChannel = new FileOutputStream(targetFile).getChannel()) {
-                targetChannel.transferFrom(originChannel, 0, originChannel.size());
+            FileChannel originChannel = new FileInputStream(originFile).getChannel();
+            try {
+                FileChannel targetChannel = new FileOutputStream(targetFile).getChannel();
+                try {
+                    targetChannel.transferFrom(originChannel, 0, originChannel.size());
+                } finally {
+                    targetChannel.close();
+                }
+            } finally {
+                originChannel.close();
             }
         } catch (IOException e) {
-            LogReceiver.e("创建文件失败; IO异常");
+            throw new IllegalArgumentException("创建文件失败; IO异常");
         }
     }
 
@@ -175,6 +179,7 @@ public class FileUtil {
         bw.close();
     }
 
+    @NonNull
     public static String readFile(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -188,15 +193,13 @@ public class FileUtil {
         return text.toString();
     }
 
+    @Nullable
     public static File findFileByCurrentDirectory(String path, String matching, boolean isRegex) {
         if (!isRegex) {
             String filePath = (path.endsWith("/") ? path : path + "/") + matching;
             File file = new File(filePath);
             if (file.exists()) {
-                LogReceiver.i("FileUtil", "找到文件; 路径: " + file.getAbsolutePath());
                 return file;
-            } else {
-                LogReceiver.i("FileUtil", "未找到文件; 路径: " + file.getAbsolutePath());
             }
         } else {
             File directory = new File(path);
@@ -206,10 +209,7 @@ public class FileUtil {
                     Pattern pattern = Pattern.compile(matching);
                     Matcher matcher = pattern.matcher(file.getName());
                     if (matcher.find()) {
-                        LogReceiver.i("FileUtil", "找到文件; 路径: " + file.getAbsolutePath());
                         return file;
-                    } else {
-                        LogReceiver.i("FileUtil", "未找到文件; 路径: " + file.getAbsolutePath());
                     }
                 }
             }
@@ -217,6 +217,7 @@ public class FileUtil {
         return null;
     }
 
+    @Nullable
     public static File[] findFilesByChildDirectory(String path, String matching, boolean isRegex) {
         File directory = new File(path);
         List<File> fileList = findFilesInDirectory(directory, matching, isRegex);
@@ -225,14 +226,12 @@ public class FileUtil {
             for (int i = 0; i < fileList.size(); i++) {
                 files[i] = fileList.get(i);
             }
-            LogReceiver.i("FileUtil", "通过当前目录及子目录找到文件; 文件数量: " + fileList.size() + " 路径: " + path + " 文件名: " + matching);
             return files;
-        } else {
-            LogReceiver.i("FileUtil", "通过当前目录及子目录未找到文件; 路径: " + path + " 文件名: " + matching);
         }
         return null;
     }
 
+    @NonNull
     private static List<File> findFilesInDirectory(File directory, String matching, boolean isRegex) {
         List<File> foundFiles = new ArrayList<>();
         if (!isRegex) {

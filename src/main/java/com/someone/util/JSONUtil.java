@@ -1,14 +1,15 @@
 package com.someone.util;
-import androidx.annotation.NonNull;
-
-import java.util.Iterator;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /*
  * @Author Someone
  * @Date 2024/11/16 22:42
  */
+
+import androidx.annotation.NonNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.Iterator;
+
 public class JSONUtil {
 
     public static JSONData createJSONData() {
@@ -48,7 +49,7 @@ public class JSONUtil {
         public JSONData put(String key, Object value) throws JSONException {
             rootObject.put(key, value);
             if (value instanceof JSONObject) {
-                return new JSONData((JSONObject)value);
+                return new JSONData((JSONObject) value);
             }
             return this;
         }
@@ -56,7 +57,7 @@ public class JSONUtil {
         public Object get(String key) throws JSONException {
             Object value = rootObject.get(key);
             if (value instanceof JSONObject) {
-                new JSONData((JSONObject)value);
+                new JSONData((JSONObject) value);
             }
             return value;
         }

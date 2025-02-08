@@ -1,7 +1,7 @@
 package com.someone.util;
 
 /*
-  @Author Someone
+ * @Author Someone
  * @Date 2024/11/05 12:10
  */
 
@@ -9,6 +9,9 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +28,7 @@ public class WindowManagerUtil {
     public static final String TAG_IS_VISIBILITY = "isVisibility";
     public static final String TAG_IS_HIDING = "isHiding";
 
-    public static WindowManager.LayoutParams getLayoutParams(View view) {
+    public static WindowManager.LayoutParams getLayoutParams(@NonNull View view) {
         return (WindowManager.LayoutParams)view.getLayoutParams();
     }
 
@@ -60,7 +63,7 @@ public class WindowManagerUtil {
             removeView(tag);
         }
         viewMap.put(tag, view);
-        tagMap.put(tag, new ArrayList<>());
+        tagMap.put(tag, new ArrayList<String>());
         windowManager.addView(view, params);
     }
 
@@ -75,6 +78,7 @@ public class WindowManagerUtil {
         }
     }
 
+    @Nullable
     public static String getViewStateTag(String tag) {
         if (viewMap.containsKey(tag)) {
             return Objects.requireNonNull(tagMap.get(tag)).get(0);
@@ -111,7 +115,6 @@ public class WindowManagerUtil {
         WindowManagerUtil.windowManagerListener = null;
     }
 
-
     public static abstract interface WindowManagerListener {
 
         public abstract void onAddView(String tag, View view, WindowManager.LayoutParams params);
@@ -119,7 +122,6 @@ public class WindowManagerUtil {
         public abstract void onUpdateViewLayout(View view, WindowManager.LayoutParams params);
 
         public abstract void onRemoveView(String tag);
-
     }
 
     public static class LayoutParams extends WindowManager.LayoutParams {
@@ -172,7 +174,7 @@ public class WindowManagerUtil {
             return this;
         }
 
-        public abstract class CustomRealize {
+        public abstract static class CustomRealize {
             public abstract void setCustomRealize();
         }
     }

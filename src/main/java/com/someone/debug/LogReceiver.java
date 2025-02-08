@@ -8,6 +8,7 @@ package com.someone.debug;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
@@ -18,6 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.someone.util.ToastUtil;
 
@@ -42,6 +46,7 @@ public final class LogReceiver {
         logScrollView = DebugWindowManager.getDisplayScroll();
     }
 
+    @Nullable
     private static View findViewWithTag(ViewGroup viewGroup, Object tag) {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
@@ -58,12 +63,14 @@ public final class LogReceiver {
         return null;
     }
 
+    @NonNull
     private static SpannableString setTextColor(String text, int color) {
         SpannableString spannableString = new SpannableString(text);
         spannableString.setSpan(new ForegroundColorSpan(color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 
+    @NonNull
     private static SpannableString setTextBold(String text) {
         SpannableString spannableString = new SpannableString(text);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -81,7 +88,9 @@ public final class LogReceiver {
                     messageStr.append(" ").append(JsonSerializer.toJson(message));
                 }
                 String logInfo = "";
-                logInfo += getCurrentTime() + " " + type + " " + getCurrentClassName() + "." + getCurrentMethodName() + "() " + messageStr + System.lineSeparator();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    logInfo += getCurrentTime() + " " + type + " " + getCurrentClassName() + "." + getCurrentMethodName() + "() " + messageStr + System.lineSeparator();
+                }
                 logTextView.append(setTextColor(logInfo, getTextColor(type)));
                 logScrollView.post(new Runnable() {
                     @Override
@@ -103,7 +112,9 @@ public final class LogReceiver {
                             messageStr.append(" ").append(JsonSerializer.toJson(message));
                         }
                         String logInfo = "";
-                        logInfo += getCurrentTime() + " " + type + " " + messageStr + System.lineSeparator();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            logInfo += getCurrentTime() + " " + type + " " + messageStr + System.lineSeparator();
+                        }
                         logTextView.append(setTextColor(logInfo, getTextColor(type)));
                         logScrollView.post(new Runnable() {
                             @Override
@@ -124,7 +135,7 @@ public final class LogReceiver {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
-    private static int getTextColor(String type) {
+    private static int getTextColor(@NonNull String type) {
         switch (type) {
             case "Info":
                 return Color.parseColor("#FF8BC34A");
@@ -160,6 +171,7 @@ public final class LogReceiver {
         addLog("Debug", message);
     }
 
+    @NonNull
     private static String getCurrentTime() {
         Date currentDate = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -186,17 +198,21 @@ public final class LogReceiver {
         }
     }
 
+    @NonNull
     private static String getStack() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         StringBuilder stack = new StringBuilder();
         for (StackTraceElement element : stackTraceElements) {
-            stack.append(element.toString()).append(System.lineSeparator());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                stack.append(element.toString()).append(System.lineSeparator());
+            }
         }
         return stack.toString();
     }
 
     public static class JsonSerializer {
 
+        @NonNull
         public static String toJson(Object obj) throws JSONException, IllegalAccessException {
             if (obj == null) return "null";
 
@@ -208,6 +224,10 @@ public final class LogReceiver {
             // 处理数组或集合
             if (obj.getClass().isArray() || obj instanceof Collection) {
                 return parseArray(obj).toString();
+            }
+
+            if (obj instanceof Enum) {
+                return ((Enum) obj).name();
             }
 
             // 处理自定义对象
@@ -225,7 +245,8 @@ public final class LogReceiver {
             return value;
         }
 
-        private static JSONArray parseArray(Object obj) throws JSONException, IllegalAccessException {
+        @NonNull
+        private static JSONArray parseArray(@NonNull Object obj) throws JSONException, IllegalAccessException {
             JSONArray jsonArray = new JSONArray();
             if (obj.getClass().isArray()) {
                 int length = Array.getLength(obj);
@@ -240,6 +261,7 @@ public final class LogReceiver {
             return jsonArray;
         }
 
+        @NonNull
         private static JSONObject parseObject(Object obj) throws JSONException, IllegalAccessException {
             JSONObject jsonObject = new JSONObject();
             Class<?> clazz = obj.getClass();
@@ -257,6 +279,10 @@ public final class LogReceiver {
 
         private static Object parseValue(Object value) throws JSONException, IllegalAccessException {
             if (value == null) return JSONObject.NULL;
+
+            if (value instanceof Enum) {
+                return ((Enum) value).name();
+            }
 
             if (isPrimitiveOrWrapper(value) || value instanceof String || value instanceof Date) {
                 return parsePrimitiveValue(value);

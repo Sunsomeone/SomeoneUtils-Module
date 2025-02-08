@@ -22,6 +22,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
@@ -43,25 +44,18 @@ import com.someone.util.ClipBoardUtil;
 import com.someone.util.GlobalUtilSetting;
 
 public class DebugWindowManager {
-    @SuppressLint("StaticFieldLeak")
     private static final Context context = GlobalUtilSetting.getContext();
-    @SuppressLint("StaticFieldLeak")
     private static final TextView logText = new TextView(context);
-    @SuppressLint("StaticFieldLeak")
     private static final ScrollView displayScroll = new ScrollView(context);
     private static LayoutParams params;
-    @SuppressLint("StaticFieldLeak")
     private static View floatButton;
-    @SuppressLint("StaticFieldLeak")
     private static View floatWindow;
-    @SuppressLint("StaticFieldLeak")
     private static ViewGroup debugWindow;
 
     static {
         initDebugWindow();
     }
 
-    @SuppressLint("RtlHardcoded")
     public static void initDebugWindow() {
         debugWindow = new LinearLayout(context);
         floatButton = createDebugButton();
@@ -90,14 +84,16 @@ public class DebugWindowManager {
         hideView("debugWindow");
     }
 
-    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
+    @NonNull
     public static View createDebugButton() {
         final FrameLayout rootLayout = getFrameLayout();
         ImageView floatBtnImg = new ImageView(context);
         floatBtnImg.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
         ShapeDrawable circleDrawable = new ShapeDrawable(new OvalShape());
         circleDrawable.getPaint().setColor(Color.parseColor("#CC4F4F4F"));
-        floatBtnImg.setBackground(circleDrawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            floatBtnImg.setBackground(circleDrawable);
+        }
         TextView floatBtnText = new TextView(context);
         floatBtnText.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
         floatBtnText.setGravity(Gravity.CENTER);
@@ -109,7 +105,6 @@ public class DebugWindowManager {
         return rootLayout;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @NonNull
     private static FrameLayout getFrameLayout() {
         final FrameLayout rootLayout = new FrameLayout(context);
@@ -127,7 +122,7 @@ public class DebugWindowManager {
         return rootLayout;
     }
 
-    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n", "RtlHardcoded"})
+    @NonNull
     public static View createDebugWindow() {
         final LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
@@ -137,7 +132,9 @@ public class DebugWindowManager {
             squareDrawable.setCornerRadius(35);
             squareDrawable.setColor(Color.parseColor("#D0505050"));
             squareDrawable.setShape(GradientDrawable.RECTANGLE);
-            rootLayout.setBackground(squareDrawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                rootLayout.setBackground(squareDrawable);
+            }
         }
         RelativeLayout topBar = new RelativeLayout(context);
         topBar.setLayoutParams(new ViewGroup.LayoutParams(-1, 125));
@@ -147,7 +144,9 @@ public class DebugWindowManager {
             squareDrawable.setCornerRadii(radii);
             squareDrawable.setColor(Color.parseColor("#CC4F4F4F"));
             squareDrawable.setShape(GradientDrawable.RECTANGLE);
-            topBar.setBackground(squareDrawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                topBar.setBackground(squareDrawable);
+            }
         }
         topBar.setOnTouchListener(new onMoveAndClickListener() {
             @Override
@@ -210,7 +209,9 @@ public class DebugWindowManager {
             squareDrawable.setCornerRadii(radii);
             squareDrawable.setColor(Color.parseColor("#CC4F4F4F"));
             squareDrawable.setShape(GradientDrawable.RECTANGLE);
-            bottomBar.setBackground(squareDrawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                bottomBar.setBackground(squareDrawable);
+            }
         }
         rootLayout.addView(topBar);
         rootLayout.addView(displayScroll);
@@ -244,7 +245,7 @@ public class DebugWindowManager {
         private int StartY;
 
         @Override
-        public boolean onTouch(View view, MotionEvent event) {
+        public boolean onTouch(View view, @NonNull MotionEvent event) {
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
@@ -271,9 +272,7 @@ public class DebugWindowManager {
                         // 限制悬浮窗位置
                         params.x = Math.max(0, Math.min(params.x, getScreenWidth() - debugWindow.getChildAt(0).getLayoutParams().width));
                         params.y = Math.max(0, Math.min(params.y, getScreenHeight() - debugWindow.getChildAt(0).getLayoutParams().height));
-                        if (debugWindow.isAttachedToWindow()) {
-                            getWindowManager().updateViewLayout(debugWindow, params);
-                        }
+                        getWindowManager().updateViewLayout(debugWindow, params);
                         LastX = (int) event.getRawX();
                         LastY = (int) event.getRawY();
                     }
@@ -294,5 +293,3 @@ public class DebugWindowManager {
         public abstract void setonClickEvent();
     }
 }
-    
-

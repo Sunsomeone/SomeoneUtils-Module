@@ -1,5 +1,10 @@
 package com.someone.util;
 
+/*
+ * @Author Someone
+ * @Date 2024/11/10 09:38
+ */
+
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -8,20 +13,16 @@ import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
-/**
- * @Author Someone
- * @Date 2024/11/10 09:38
- */
 public class SpannableStringUtil {
+    public final static int TYPEFACE_NORMAL = 0;
+    public final static int TYPEFACE_BOLD = 1;
+    public final static int TYPEFACE_ITALIC = 2;
+    public final static int TYPEFACE_BOLD_ITALIC = 3;
     private final SpannableString spannableString;
     private int flags = Spannable.SPAN_EXCLUSIVE_EXCLUSIVE;
     private int start = 0;
     private int end = -1;
     private SpanStyle style;
-    public final static int TYPEFACE_NORMAL = 0;
-    public final static int TYPEFACE_BOLD = 1;
-    public final static int TYPEFACE_ITALIC = 2;
-    public final static int TYPEFACE_BOLD_ITALIC = 3;
 
     public SpannableStringUtil(String str) {
         this.spannableString = new SpannableString(str);

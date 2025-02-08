@@ -7,7 +7,6 @@ package com.someone.util;
 
 import android.util.SparseArray;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class DataStorageUtil {
 
@@ -22,41 +21,33 @@ public class DataStorageUtil {
 
         public MultiValueMap<K, V> setKey(K k) {
             currentKey = k;
-            if (keyMap.containsKey(k)) {
-                currentData = keyMap.get(k);
-            } else {
-                currentData = new Data<>();
-            }
+            currentData = keyMap.containsKey(k) ? keyMap.get(k) : new Data<V>();
             return this;
         }
 
         public void put(int page, V v) {
-            if (Objects.isNull(currentKey) || Objects.isNull(currentData)) {
-                return;
+            if (currentKey != null && currentData != null) {
+                currentData.put(page, v);
+                keyMap.put(currentKey, currentData);
             }
-            currentData.put(page, v);
-            keyMap.put(currentKey, currentData);
         }
 
-        public void put(V... vArray) {
-            if (Objects.isNull(currentKey) || Objects.isNull(currentData)) {
-                return;
+        @SafeVarargs
+        public final void put(V... vArray) {
+            if (currentKey != null && currentData != null) {
+                for (V v : vArray) {
+                    currentData.put(v);
+                }
+                keyMap.put(currentKey, currentData);
             }
-            for (V v : vArray) {
-                currentData.put(v);
-            }
-            keyMap.put(currentKey, currentData);
         }
 
         public Data<V> getData() {
-            if (Objects.isNull(currentKey) || Objects.isNull(currentData)) {
-                return null;
-            }
-            return currentData;
+            return currentKey == null || currentData == null ? null : currentData;
         }
 
         public static class Data<V> {
-            private SparseArray<V> valueArray;
+            private final SparseArray<V> valueArray;
             private int page = 0;
 
             public Data() {
