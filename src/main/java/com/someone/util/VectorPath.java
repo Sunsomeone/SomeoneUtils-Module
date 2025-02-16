@@ -2202,7 +2202,7 @@ public class VectorPath {
 
         @Nullable
         public final Path getPath(@NonNull StyleType styleType) {
-            AssetManager assetManager = GlobalUtilSetting.getContext().getAssets();
+            AssetManager assetManager = GlobalContextUtil.getContext().getAssets();
             int targetLine = ((this.ordinal()) * 5) + (styleType.ordinal() + 1);
             InputStream inputStream = null;
             LineNumberReader reader = null;

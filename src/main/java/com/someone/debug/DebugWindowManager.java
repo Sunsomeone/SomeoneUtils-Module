@@ -5,17 +5,16 @@ package com.someone.debug;
  * @Date 2024/09/04 20:29
  */
 
-import static com.someone.util.WindowManagerUtil.LayoutParams;
-import static com.someone.util.WindowManagerUtil.addView;
-import static com.someone.util.WindowManagerUtil.createLayoutParams;
-import static com.someone.util.WindowManagerUtil.getWindowManager;
-import static com.someone.util.WindowManagerUtil.hideView;
-import static com.someone.util.WindowManagerUtil.removeView;
-import static com.someone.util.WindowManagerUtil.showView;
-import static com.someone.util.WindowUtil.getScreenHeight;
-import static com.someone.util.WindowUtil.getScreenWidth;
+import static com.someone.util.WindowManagerUtils.LayoutParams;
+import static com.someone.util.WindowManagerUtils.addView;
+import static com.someone.util.WindowManagerUtils.createLayoutParams;
+import static com.someone.util.WindowManagerUtils.getWindowManager;
+import static com.someone.util.WindowManagerUtils.hideView;
+import static com.someone.util.WindowManagerUtils.removeView;
+import static com.someone.util.WindowManagerUtils.showView;
+import static com.someone.util.WindowUtils.getScreenHeight;
+import static com.someone.util.WindowUtils.getScreenWidth;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -40,11 +39,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.someone.util.ClipBoardUtil;
-import com.someone.util.GlobalUtilSetting;
+import com.someone.util.ClipBoardUtils;
+import com.someone.util.GlobalContextUtil;
 
 public class DebugWindowManager {
-    private static final Context context = GlobalUtilSetting.getContext();
+    private static final Context context = GlobalContextUtil.getContext();
     private static final TextView logText = new TextView(context);
     private static final ScrollView displayScroll = new ScrollView(context);
     private static LayoutParams params;
@@ -195,7 +194,7 @@ public class DebugWindowManager {
             @Override
             public boolean onLongClick(View v) {
                 Selection.setSelection((Spannable) ((TextView) v).getText(), 0, ((TextView) v).getText().length());
-                ClipBoardUtil.clip(((TextView) v).getText().toString());
+                ClipBoardUtils.clip(((TextView) v).getText().toString());
                 return true;
             }
         });

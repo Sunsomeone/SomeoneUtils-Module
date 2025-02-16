@@ -23,7 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.someone.util.ToastUtil;
+import com.someone.util.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,7 +99,7 @@ public final class LogReceiver {
                     }
                 });
             } catch (IllegalAccessException | JSONException e) {
-                ToastUtil.makeLongToast(e);
+                ToastUtils.makeLongToast(e);
             }
         } else {
             Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -123,7 +123,7 @@ public final class LogReceiver {
                             }
                         });
                     } catch (IllegalAccessException | JSONException e) {
-                        ToastUtil.makeLongToast(e);
+                        ToastUtils.makeLongToast(e);
                     }
                 }
             });
